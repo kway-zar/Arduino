@@ -1,1 +1,1 @@
-print("{0} {2} {1}".format("I","you","love"))
+print("{0} {2} {1}".format("I","You","Love"))
