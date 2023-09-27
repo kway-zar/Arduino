@@ -25,14 +25,14 @@ void setTime(int hours, int minutes, int seconds) {
 
 string cvtTime_to_str(int hrs,int mins, int sec) {
 
-    string alarm;
+    string cnvertdSTR;
     string hour = to_string(hrs);
     string minutes = to_string(mins);
     string seconds = to_string(sec);
 
-    alarm = hour + ":" + minutes + ":" + seconds;
+    cnvertdSTR = hour + ":" + minutes + ":" + seconds;
 
-    return alarm;
+    return cnvertdSTR;
     
 };
 
