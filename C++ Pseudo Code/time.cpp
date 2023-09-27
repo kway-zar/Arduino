@@ -9,11 +9,13 @@ using namespace std;
 int day;
 
 int sec,mins,hrs;
+string timeAlarm;
 
 bool deviceIsActive;
 bool dayCompleted;
 
 bool doMechanism;
+
 
 void setTime(int hours, int minutes, int seconds) {
     
@@ -36,18 +38,17 @@ string cvtTime_to_str(int hrs,int mins, int sec) {
     
 };
 
-void doMech(bool condition, int day ) {
-    
+void doMech(bool condition ) {
+
     //mechanism here
 };
 
 
 
 int main() {
-
-
-    
+  
     setTime(1,2,3);
+    timeAlarm = cvtTime_to_str(1,2,10); // set Alarm Time
 
     deviceIsActive = true;
 
@@ -74,14 +75,24 @@ int main() {
                     hrs = 00;
                     
                 }
+                string time = cvtTime_to_str(hrs,mins,sec);
+
+                if(time == timeAlarm) {
+
+                    doMech(true);
+
+            }
 
         if(day == 1) {
             
             dayCompleted = true;
             day = 0;
+            
+            if(sec==2) {
 
-            doMechanism = true;
+                dayCompleted = false; //means that it's the day after
 
+            }
         }
         
     }
