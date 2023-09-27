@@ -2,6 +2,8 @@
 
 #include <windows.h>
 
+#include <string>
+
 using namespace std;
 
 int day;
@@ -21,10 +23,29 @@ void setTime(int hours, int minutes, int seconds) {
 
 };
 
+string cvtTime_to_str(int hrs,int mins, int sec) {
+
+    string alarm;
+    string hour = to_string(hrs);
+    string minutes = to_string(mins);
+    string seconds = to_string(sec);
+
+    alarm = hour + ":" + minutes + ":" + seconds;
+
+    return alarm;
+    
+};
+
+void doMech(bool condition, int day ) {
+    
+    //mechanism here
+};
 
 
 
 int main() {
+
+
     
     setTime(1,2,3);
 
@@ -57,12 +78,13 @@ int main() {
         if(day == 1) {
             
             dayCompleted = true;
+            day = 0;
 
             doMechanism = true;
 
         }
         
     }
-    
+
     return 0;
 }
