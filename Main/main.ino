@@ -15,15 +15,16 @@ int LightRange2;
 
 bool doMechanism;
 
-#define pin1 4
+
 
 
 
 
 void setup() {
 
-  pinMode(pin1, OUTPUT);
-
+    setTime(1,2,0);
+    timeAlarm_range1 = cvtTime_to_str(1,2,3);
+    timeAlarm_range2 = cvtTime_to_str(1,2,5);
 
 }
 
@@ -32,14 +33,10 @@ void loop() {
     Serial.begin(9600);
     
     deviceIsActive = true;
-    
-    setTime(1,2,0)
 
     while(deviceIsActive !=false) {
         
-        ;
-        timeAlarm_range1 = cvtTime_to_str(1,2,3);
-        timeAlarm_range2 = cvtTime_to_str(1,2,5);
+
 
         sec++;
         delay(1000);
@@ -73,7 +70,7 @@ void loop() {
 
                       
 
-                      digitalWrite(pin1, HIGH);
+                      
 
                       // if(LDRSensor <= LightRange1 && LDRSensor >= LightRange2) {
 
