@@ -15,9 +15,14 @@ int LightRange2;
 
 bool doMechanism;
 
+#define pin1 4
+
+
 
 
 void setup() {
+
+  pinMode(pin1, OUTPUT);
 
 
 }
@@ -27,15 +32,18 @@ void loop() {
     Serial.begin(9600);
     
     deviceIsActive = true;
+    
+    setTime(1,2,0)
 
     while(deviceIsActive !=false) {
         
-        setTime(1,2,0);
+        ;
         timeAlarm_range1 = cvtTime_to_str(1,2,3);
         timeAlarm_range2 = cvtTime_to_str(1,2,5);
 
         sec++;
         delay(1000);
+
         String time = cvtTime_to_str(hrs,mins,sec);
 
         Serial.print("\nTime:");
@@ -59,17 +67,20 @@ void loop() {
                   day++;
                   hrs = 0;
                 }
-                  if(time == timeAlarm_range1 || timeAlarm_range2) {
+                  if(time == timeAlarm_range1 || time == timeAlarm_range2) {
 
                       bool condition1 = true;
 
-                      if(LDRSensor <= LightRange1 && LDRSensor >= LightRange2) {
+                      
+
+                      digitalWrite(pin1, HIGH);
+
+                      // if(LDRSensor <= LightRange1 && LDRSensor >= LightRange2) {
 
 
-                      }
+                      // }
                       
                   }
-
                   if(day == 1) {
 
                     dayCompleted = true;
@@ -88,8 +99,8 @@ void loop() {
 void setTime(int hours,int minutes, int seconds) {
 
     hrs = hours;
-    minutes = mins;
-    seconds = sec;
+    mins = minutes;
+    sec = seconds;
 
 };
 
