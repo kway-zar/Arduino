@@ -8,8 +8,8 @@ int day;
 int sec,mins,hrs;
 int LDRSensor;
 
-
-String timeAlarm_range1; 
+String WaterLevel;
+String timeAlarm; 
 
 
 bool deviceIsActive;
@@ -23,9 +23,10 @@ bool mechanismCompleted;
 #define LDRpin A0
 #define motorPin 6
 const int trigPin = 9;
-const int echoPin = 10;
+const  int echoPin = 10;
 long duration;
 int ULTRASONIC_TIME;
+
 float distanceInch;
 
 
@@ -34,7 +35,7 @@ void setup() {
   pinMode(trigPin,OUTPUT);
   pinMode(echoPin,INPUT);
   pinMode(motorPin,OUTPUT);
-  lcd.begin();
+  lcd.begin(16,2);
   lcd.backlight();
   pinMode(6,OUTPUT);
   setTime(0,0,0);
@@ -61,6 +62,8 @@ void loop() {
         String time = cvtTime_to_str(hrs,mins,sec);
         sec++;
         lcd.print(time);
+        lcd.setCursor(0,1);
+        lcd.print(WaterLevel);
         delay(1000);
         lcd.clear();
 
@@ -96,7 +99,7 @@ void loop() {
                       
                       Serial.println(" condition completed");
 
-                      doMech(true,true);
+                      doMech(true);
                       
 
                   }
@@ -112,23 +115,20 @@ void loop() {
 
                       Serial.println("day reset");
                     }
-                    int LOW,MID;
+                    int LOW_LEVEL, MID_LEVEL;
+                    LOW_LEVEL = 12;
+                    MID_LEVEL = 8;
 
-                    if(distance < LOW) {
+                    if(distanceInch > LOW_LEVEL) {
 
-                        lcd.set(0,2);
-                        lcd.print("LEVEL:LOW");
+                      WaterLevel = "LEVEL:LOW";
 
+                    } else if(distanceInch > MID_LEVEL ) {
+                        WaterLevel = "LEVEL:MID";
 
-                    } else if(distance< MID ) {
-
-                         lcd.set(0,2);
-                         lcd.print("LEVEL: MID")
                     } else {
 
-                          lcd.set(0,2);
-                          lcd.print("LEVEL: HIGH");
-
+                        WaterLevel = "LEVEL:HIGH";
                     }
 
 
