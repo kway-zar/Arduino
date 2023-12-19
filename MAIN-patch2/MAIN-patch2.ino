@@ -22,8 +22,8 @@ bool mechanismCompleted;
 
 #define LDRpin A0
 #define motorPin 6
-const trigPin = 9;
-const echoPin = 10;
+const int trigPin = 9;
+const int echoPin = 10;
 long duration;
 int ULTRASONIC_TIME;
 float distanceInch;
