@@ -171,8 +171,8 @@ void doMech(bool condition1) {
         
         
         
-        delay(3000);
-        sec +=3; // it equals to lost seconds
+        delay(20000);
+        sec +=20; // it equals to lost seconds
         
         digitalWrite(motorPin, LOW);
 
