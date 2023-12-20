@@ -35,7 +35,13 @@ void setup() {
   pinMode(trigPin,OUTPUT);
   pinMode(echoPin,INPUT);
   pinMode(motorPin,OUTPUT);
-  lcd.begin(16,2);
+
+  digitalWrite(trigPin,LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin,LOW);
+  lcd.begin();
   lcd.backlight();
   pinMode(6,OUTPUT);
   setTime(0,0,0);
@@ -51,11 +57,7 @@ void loop() {
     
     while(deviceIsActive !=false) {
 
-        digitalWrite(trigPin,LOW);
-        delayMicroseconds(2);
-        digitalWrite(trigPin, HIGH);
-        delayMicroseconds(10);
-        digitalWrite(trigPin,LOW);
+        
         duration = pulseIn(echoPin,HIGH);
         distanceInch = duration*0.0133/2;
 
@@ -116,8 +118,8 @@ void loop() {
                       Serial.println("day reset");
                     }
                     int LOW_LEVEL, MID_LEVEL;
-                    LOW_LEVEL = 12;
-                    MID_LEVEL = 8;
+                    LOW_LEVEL = 7;
+                    MID_LEVEL = 5;
 
                     if(distanceInch > LOW_LEVEL) {
 
@@ -126,7 +128,7 @@ void loop() {
                     } else if(distanceInch > MID_LEVEL ) {
                         WaterLevel = "LEVEL:MID";
 
-                    } else {
+                    } else if(distanceInch < 5){
 
                         WaterLevel = "LEVEL:HIGH";
                     }
