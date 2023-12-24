@@ -14,7 +14,6 @@ String timeAlarm;
 
 bool deviceIsActive;
 
-#define LDRpin A0
 #define motorPin 6
 const int trigPin = 9;
 const  int echoPin = 10;
@@ -35,7 +34,7 @@ void setup() {
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin,LOW);
-  lcd.begin(16,2);
+  lcd.begin();
   lcd.backlight();
   pinMode(6,OUTPUT);
   timeAlarm = cvtTime_to_str(9,2,30);
@@ -76,21 +75,21 @@ void loop() {
 
         }
         
-          int LOW_LEVEL, MID_LEVEL;
-          LOW_LEVEL = 7;
-          MID_LEVEL = 5;
+        int LOW_LEVEL, MID_LEVEL;
+        LOW_LEVEL = 7;
+        MID_LEVEL = 5;
 
-          if(distanceInch > LOW_LEVEL) {
+        if(distanceInch > LOW_LEVEL) {
 
-            WaterLevel = "LEVEL:LOW";
+          WaterLevel = "LEVEL:LOW";
 
-          } else if(distanceInch > MID_LEVEL ) {
-              WaterLevel = "LEVEL:MID";
+        } else if(distanceInch > MID_LEVEL ) {
+            WaterLevel = "LEVEL:MID";
 
-          } else if(distanceInch < 5){
+        } else if(distanceInch < 5){
 
-              WaterLevel = "LEVEL:HIGH";
-          }
+            WaterLevel = "LEVEL:HIGH";
+        }
 
 
       
