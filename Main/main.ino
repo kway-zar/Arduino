@@ -1,109 +1,96 @@
 
+#include <RTClib.h>
+#include <LiquidCrystal_I2C.h>
 
-int day;
-int sec,mins,hrs;
+LiquidCrystal_I2C lcd(0x27,16,12);
+RTC_DS3231 rtc;
+
+
 int LDRSensor;
 
-String timeAlarm_range1; //this are also strings
-String timeAlarm_range2;
-String timeAlarm_range3;
+String WaterLevel;
+String timeAlarm; 
+
 
 bool deviceIsActive;
-bool dayCompleted;
-bool condition1;
-bool condition2;
-
-bool mechanismCompleted;
-
 
 #define LDRpin A0
+#define motorPin 6
+const int trigPin = 9;
+const  int echoPin = 10;
+long duration;
+int ULTRASONIC_TIME;
 
-
+float distanceInch;
 
 
 void setup() {
 
-  pinMode(2,OUTPUT);
+  pinMode(trigPin,OUTPUT);
+  pinMode(echoPin,INPUT);
+  pinMode(motorPin,OUTPUT);
 
+  digitalWrite(trigPin,LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin,LOW);
+  lcd.begin(16,2);
+  lcd.backlight();
+  pinMode(6,OUTPUT);
+  timeAlarm = cvtTime_to_str(9,2,30);
+  rtc.begin();
 
 }
 
 void loop() {
 
     Serial.begin(9600);
-    deviceIsActive = true;
-
-    LDRSensor = analogRead(LDRpin);
- 
-    setTime(23,59,50);
-
+    deviceIsActive = true; 
+    
+    
     while(deviceIsActive !=false) {
+
+        DateTime now = rtc.now();
+        
+        duration = pulseIn(echoPin,HIGH);
+        distanceInch = duration*0.0133/2;
+
+        String time = cvtTime_to_str(now.hour(),now.minute(),now.second());
+        
+        lcd.print(time);
+        lcd.setCursor(0,1);
+        lcd.print(WaterLevel);
+        delay(1000);
+        lcd.clear();
 
         
 
-        timeAlarm_range1 = cvtTime_to_str(0,0,2);
-        timeAlarm_range2 = cvtTime_to_str(1,2,10);
 
-        sec++;
-        delay(1000);
-
-        String time = cvtTime_to_str(hrs,mins,sec);
-
-        Serial.print("\nTime:");
-        Serial.print(hrs);
-        Serial.print(":");
-        Serial.print(mins);
-        Serial.print(":");
-        Serial.print(sec);
-
-
-
-        if(sec == 60) {
+        if(time == timeAlarm) {
             
-            mins++;
-            sec = 0;
-          } if(mins == 60) {
-              
-              hrs++;
-              mins = 0;             
-              } if(hrs == 24) {
+            Serial.println(" condition completed");
 
-                  day++;
-                  hrs = 0;
-                }
-                  
-                  if(time == timeAlarm_range1 || time == timeAlarm_range2) {
-                      
+            doMech(true);
+            
 
-                      condition1 = true;
-                      
-                      Serial.println(" condition completed");
-                      
+        }
+        
+          int LOW_LEVEL, MID_LEVEL;
+          LOW_LEVEL = 7;
+          MID_LEVEL = 5;
 
-                       if(LDRSensor > 700 || LDRSensor <= 800) {
+          if(distanceInch > LOW_LEVEL) {
 
-                          condition2 = true;
-                          Serial.println("condtion2 completed");
+            WaterLevel = "LEVEL:LOW";
 
-                          doMech(condition1,condition2);
+          } else if(distanceInch > MID_LEVEL ) {
+              WaterLevel = "LEVEL:MID";
 
+          } else if(distanceInch < 5){
 
-
-                       }
-                      
-                  }
-                  if(day == 1) {
-
-                    day = 0;
-                    
-                    } if (hrs == 0 && mins ==0 && sec == 0) {
-
-                      dayCompleted = false;
-
-                      mechanismCompleted = false;
-
-                      Serial.println("day reset");
-                    }
+              WaterLevel = "LEVEL:HIGH";
+          }
 
 
       
@@ -111,13 +98,6 @@ void loop() {
 
 }
 
-void setTime(int hours,int minutes, int seconds) {
-
-    hrs = hours;
-    mins = minutes;
-    sec = seconds;
-
-};
 
 String cvtTime_to_str(int hrs, int mins, int sec) {
 
@@ -132,21 +112,26 @@ String cvtTime_to_str(int hrs, int mins, int sec) {
 
 };
 
-void doMech(bool condition1, bool condition2) {
-    if(condition1 == true && condition2 == true) {
-
-        digitalWrite(2,HIGH);
+void doMech(bool condition1) {
+    if(condition1 == true) {
+        
+        lcd.print("Engaging...\n");
+        digitalWrite(motorPin,HIGH);
 
         dayCompleted = true;
         mechanismCompleted = true;
         
+        delay(20000);
+         // it equals to lost seconds
+        
+        digitalWrite(motorPin, LOW);
 
-        delay(3000);
-        sec +=3; // it equals to lost seconds
-        digitalWrite(2, LOW);
+        lcd.setCursor(0,2); 
+        lcd.print("Done. \n");
+        delay(2000);
+        
+        lcd.clear();
 
     }
-
+    
 };
-
-
