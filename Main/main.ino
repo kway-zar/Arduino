@@ -1,12 +1,11 @@
-
-#include <RTClib.h>
+#include <ThreeWire.h>
+#include <RtcDs1302.h>
 #include <LiquidCrystal_I2C.h>
 
 LiquidCrystal_I2C lcd(0x27,16,12);
-RTC_DS3231 rtc;
+ThreeWire myWire (4,5,2);
+RtcDS1302<ThreeWire> Rtc(myWire);
 
-
-int LDRSensor;
 
 String WaterLevel;
 String timeAlarm; 
@@ -37,8 +36,8 @@ void setup() {
   lcd.begin();
   lcd.backlight();
   pinMode(6,OUTPUT);
-  timeAlarm = cvtTime_to_str(9,2,30);
-  rtc.begin();
+  timeAlarm = cvtTime_to_str(8,1,30);
+  Rtc.Begin();
 
 }
 
@@ -46,26 +45,27 @@ void loop() {
 
     Serial.begin(9600);
     deviceIsActive = true; 
-    
-    
     while(deviceIsActive !=false) {
-
-        DateTime now = rtc.now();
+        
+        
+        RtcDateTime now = Rtc.GetDateTime();
+  
+       
         
         duration = pulseIn(echoPin,HIGH);
         distanceInch = duration*0.0133/2;
 
-        String time = cvtTime_to_str(now.hour(),now.minute(),now.second());
+        String time = cvtTime_to_str(now.Hour(),now.Minute(),now.Second());
         
         lcd.print(time);
         lcd.setCursor(0,1);
         lcd.print(WaterLevel);
-        delay(1000);
+        delay(500);
         lcd.clear();
-
         
-
-
+        Serial.print(time + "    \n");
+        Serial.print(timeAlarm);
+    
         if(time == timeAlarm) {
             
             Serial.println(" condition completed");
@@ -109,7 +109,7 @@ String cvtTime_to_str(int hrs, int mins, int sec) {
 
     return cnvertdSTR;
 
-};
+}
 
 void doMech(bool condition1) {
     if(condition1 == true) {
@@ -117,9 +117,6 @@ void doMech(bool condition1) {
         lcd.print("Engaging...\n");
         digitalWrite(motorPin,HIGH);
 
-        dayCompleted = true;
-        mechanismCompleted = true;
-        
         delay(20000);
          // it equals to lost seconds
         
@@ -133,4 +130,4 @@ void doMech(bool condition1) {
 
     }
     
-};
+}
