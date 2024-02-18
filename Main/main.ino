@@ -19,6 +19,7 @@ const  int echoPin = 10;
 long duration;
 int ULTRASONIC_TIME;
 
+
 float distanceInch;
 
 
@@ -27,30 +28,28 @@ void setup() {
   pinMode(trigPin,OUTPUT);
   pinMode(echoPin,INPUT);
   pinMode(motorPin,OUTPUT);
-
-  digitalWrite(trigPin,LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin,LOW);
-  lcd.begin();
+ 
   lcd.backlight();
   pinMode(6,OUTPUT);
   timeAlarm = cvtTime_to_str(8,1,30);
+  lcd.init();
   Rtc.Begin();
+}  
 
-}
 
 void loop() {
 
     Serial.begin(9600);
     deviceIsActive = true; 
     while(deviceIsActive !=false) {
-        
-        
+        digitalWrite(trigPin,LOW);
+        delayMicroseconds(2);
+        digitalWrite(trigPin, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(trigPin,LOW);
+      
         RtcDateTime now = Rtc.GetDateTime();
-  
-       
+
         
         duration = pulseIn(echoPin,HIGH);
         distanceInch = duration*0.0133/2;
@@ -63,8 +62,9 @@ void loop() {
         delay(500);
         lcd.clear();
         
-        Serial.print(time + "    \n");
-        Serial.print(timeAlarm);
+        Serial.print(time + "\n");
+        Serial.println("Alarm:"+ timeAlarm);
+        Serial.println(distanceInch);
     
         if(time == timeAlarm) {
             
@@ -117,7 +117,7 @@ void doMech(bool condition1) {
         lcd.print("Engaging...\n");
         digitalWrite(motorPin,HIGH);
 
-        delay(20000);
+        delay(30000);
          // it equals to lost seconds
         
         digitalWrite(motorPin, LOW);
